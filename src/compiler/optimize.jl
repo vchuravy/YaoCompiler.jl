@@ -18,10 +18,15 @@ Base.iterate(p::Core.Compiler.Pair, st) = Core.Compiler.iterate(p, st)
 
 Base.getindex(m::Core.Compiler.MethodLookupResult, idx::Int) = Core.Compiler.getindex(m, idx)
 
-function Core.Compiler.optimize(interp::YaoInterpreter, opt::OptimizationState, params::OptimizationParams, @nospecialize(result))
+function Core.Compiler.optimize(
+    interp::YaoInterpreter,
+    opt::OptimizationState,
+    params::OptimizationParams,
+    @nospecialize(result)
+)
     nargs = Int(opt.nargs) - 1
     @timeit "optimizer" ir = Core.Compiler.run_passes(opt.src, nargs, opt)
-    
+
     # make sure all const are inlined
     # Julia itself may not inline all
     # the const values we want, e.g gates
